@@ -47,12 +47,12 @@ class ApiService extends NyApiService {
   | Authenticate your API requests using a bearer token or any other method
   |-------------------------------------------------------------------------- */
 
-  @override
-  Future<RequestHeaders> setAuthHeaders(RequestHeaders headers) async {
-    final String apiKey = '1d162bd381680f53f865b4ebe80e501e';
-    headers.addBearerToken('Bearer $apiKey');
-    return headers;
-  }
+  // @override
+  // Future<RequestHeaders> setAuthHeaders(RequestHeaders headers) async {
+  //   final String apiKey = '1d162bd381680f53f865b4ebe80e501e';
+  //   headers.addBearerToken('Bearer $apiKey');
+  //   return headers;
+  // }
 
   /* Should Refresh Token
   |--------------------------------------------------------------------------

@@ -205,16 +205,16 @@ class _LoginPageState extends State<LoginPage> {
                           await prefs.setString('password', password);
                           String? sessionid =
                               await loginApi.login(username, password);
-                          if (sessionid != null) {
-                            await prefs.setString('sessionId', sessionid);
-                            globals.username = _username.text;
-                            Navigator.pushReplacementNamed(
-                                context, '/main_screen');
-                          } else {
-                            CustomToast.showToastWarning(
-                                description:
-                                    "Tài khoản hoặc mật khẩu không đúng");
-                          }
+                          // if (sessionid != null) {
+                          //   await prefs.setString('sessionId', sessionid);
+                          //   globals.username = _username.text;
+                          Navigator.pushReplacementNamed(
+                              context, '/main_screen');
+                          // } else {
+                          //   CustomToast.showToastWarning(
+                          //       description:
+                          //           "Tài khoản hoặc mật khẩu không đúng");
+                          // }
                           setState(() {
                             loading = false;
                           });

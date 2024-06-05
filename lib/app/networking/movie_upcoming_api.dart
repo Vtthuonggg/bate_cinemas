@@ -9,10 +9,7 @@ class MovieUpcomingApi {
   Future<Map<String, dynamic>> fetchUpcomingMovie() async {
     try {
       final response = await _apiService.network(
-        request: (request) => request.get("/movie/upcoming", queryParameters: {
-          'api_key': dotenv.env['API_KEY'],
-          'language': 'vi',
-        }),
+        request: (request) => request.get("/api/movies/coming"),
       );
 
       if (response != null) {

@@ -24,8 +24,9 @@ class _NowPlayingState extends State<NowPlaying> {
   Future fetchMovies() async {
     try {
       var res = await movieNowPlayingApi.fetchNowPlayingMovies();
-      if (res != null && res.containsKey('results')) {
-        movies = res['results'];
+      if (res != null) {
+        movies = res;
+        print(movies);
       } else {
         print('No results found');
       }
@@ -80,12 +81,12 @@ class _NowPlayingState extends State<NowPlaying> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Image.network(
-                            'https://image.tmdb.org/t/p/w500${movies[index]['poster_path']}',
+                            movies[index]['smallImageURl'],
                             fit: BoxFit.cover,
                           ),
                         ),
                         Text(
-                          movies[index]['title'],
+                          movies[index]['name'],
                           style: GoogleFonts.oswald(),
                           overflow: TextOverflow.ellipsis,
                         )

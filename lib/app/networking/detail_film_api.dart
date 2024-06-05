@@ -9,17 +9,11 @@ class MovieDetailApi {
   Future<Map<String, dynamic>> fetchMovieDetail(int movieId) async {
     try {
       final response = await _apiService.network(
-        request: (request) => request.get("/movie/$movieId", queryParameters: {
-          'api_key': dotenv.env['API_KEY'],
-          'language': 'vi',
-        }),
+        request: (request) => request
+            .get("/api/movies/details", queryParameters: {'movieId': movieId}),
       );
-      if (response != null) {
-        return response;
-      } else {
-        print('Failed to load movie details');
-        return {};
-      }
+
+      return response;
     } catch (e) {
       print('Failed to fetch movie details: $e');
       return {};
@@ -29,15 +23,11 @@ class MovieDetailApi {
   Future<Map<String, dynamic>> getTrailer(int movieId) async {
     try {
       final response = await _apiService.network(
-        request: (request) =>
-            request.get("/movie/$movieId/videos", queryParameters: {
-          'api_key': dotenv.env['API_KEY'],
-          'language': 'vi',
-        }),
+        request: (request) => request.get("/movie/$movieId/videos"),
       );
       if (response != null) {
         print(response);
-        return response;
+        return Map<String, dynamic>.from(response);
       } else {
         print('Failed to load movie details');
         return {};

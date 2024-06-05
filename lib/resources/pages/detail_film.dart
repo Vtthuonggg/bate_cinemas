@@ -34,8 +34,8 @@ class _DetailFilmState extends State<DetailFilm> {
     super.initState();
     movieDetailApi = MovieDetailApi(_apiService, movieId: widget.movieId);
     fetchDetail();
-    getVideo();
-    fetchFavorite();
+    // getVideo();
+    // fetchFavorite();
   }
 
   @override
@@ -55,18 +55,18 @@ class _DetailFilmState extends State<DetailFilm> {
     }
   }
 
-  Future<void> fetchFavorite() async {
-    var res = await FavoriteApi(_apiService).getFavoriteMovies();
-    print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
-    print(res);
-    for (var item in res) {
-      if (item['id'] == widget.movieId) {
-        setState(() {
-          isFavorite = true;
-        });
-      }
-    }
-  }
+  // Future<void> fetchFavorite() async {
+  //   var res = await FavoriteApi(_apiService).getFavoriteMovies();
+  //   print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+  //   print(res);
+  //   for (var item in res) {
+  //     if (item['id'] == widget.movieId) {
+  //       setState(() {
+  //         isFavorite = true;
+  //       });
+  //     }
+  //   }
+  // }
 
   Future<void> fetchDetail() async {
     setState(() {
@@ -91,27 +91,27 @@ class _DetailFilmState extends State<DetailFilm> {
     }
   }
 
-  Future<void> getVideo() async {
-    setState(() {
-      _loading = true;
-    });
-    try {
-      var res = await movieDetailApi.getTrailer(widget.movieId);
-      if (res['results'][0] != null || (res['results'][0].isNotEmpty)) {
-        video = res['results'][0];
-      }
-      print("link trailer: $video");
-    } catch (e) {
-      print('Lỗi video: $e');
-      video = {};
-    } finally {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-      }
-    }
-  }
+  // Future<void> getVideo() async {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+  //   try {
+  //     var res = await movieDetailApi.getTrailer(widget.movieId);
+  //     if (res['results'][0] != null || (res['results'][0].isNotEmpty)) {
+  //       video = res['results'][0];
+  //     }
+  //     print("link trailer: $video");
+  //   } catch (e) {
+  //     print('Lỗi video: $e');
+  //     video = {};
+  //   } finally {
+  //     if (mounted) {
+  //       setState(() {
+  //         _loading = false;
+  //       });
+  //     }
+  //   }
+  // }
 
   String limitWords(String text, int limit) {
     List<String> words = text.split(' ');
@@ -152,7 +152,20 @@ class _DetailFilmState extends State<DetailFilm> {
         progressColor = Colors.green;
       }
     }
-    String? videoKey = video['key'].toString(); // replace with your video key
+    String extractVideoIdFromUrl(String url) {
+      RegExp regExp = RegExp(
+        r"(youtu\.be/|youtube\.com/embed/)([^&]+)",
+        caseSensitive: false,
+        multiLine: false,
+      );
+
+      Match? match = regExp.firstMatch(url);
+      return match?.group(2) ?? ''; // if no match, return empty string
+    }
+
+    String? videoUrl = detail['trailerURL'].toString();
+
+    String? videoKey = videoUrl != null ? extractVideoIdFromUrl(videoUrl) : '';
 
     YoutubePlayerController _controller = YoutubePlayerController(
       initialVideoId: videoKey,
@@ -178,8 +191,8 @@ class _DetailFilmState extends State<DetailFilm> {
                     Container(
                       width: width,
                       child: Image.network(
-                        detail['backdrop_path'] != null
-                            ? 'https://image.tmdb.org/t/p/w780${detail['backdrop_path']}'
+                        detail['largeImageURL'] != null
+                            ? detail['largeImageURL']
                             : 'https://via.placeholder.com/150',
                       ),
                     ),
@@ -191,7 +204,7 @@ class _DetailFilmState extends State<DetailFilm> {
                         children: [
                           SizedBox(height: 10),
                           Text(
-                            detail['title'] ?? '',
+                            detail['name'] ?? '',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
@@ -203,16 +216,20 @@ class _DetailFilmState extends State<DetailFilm> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              detail['overview'] == null ||
-                                      detail['overview'].isEmpty
+                              detail['longDescription'] == null ||
+                                      detail['longDescription'].isEmpty
                                   ? 'Tạm thời chưa có mô tả'
                                   : _showFullText
-                                      ? detail['overview']
-                                      : limitWords(detail['overview'], 50),
+                                      ? detail['longDescription']
+                                      : limitWords(
+                                          detail['longDescription'], 50),
                               style: TextStyle(fontSize: 14),
                             ),
                           ),
-                          if ((detail['overview'] ?? '').split(' ').length > 50)
+                          if ((detail['longDescription'] ?? '')
+                                  .split(' ')
+                                  .length >
+                              50)
                             TextButton(
                               child: Text(
                                 _showFullText ? "Thu gọn" : "Xem thêm",
@@ -241,7 +258,7 @@ class _DetailFilmState extends State<DetailFilm> {
                               ),
                               SizedBox(width: 5),
                               Text(formatDate(
-                                detail['release_date'] ?? '',
+                                detail['releaseDate'] ?? '',
                               )),
                               SizedBox(width: 20),
                               Container(
@@ -253,9 +270,9 @@ class _DetailFilmState extends State<DetailFilm> {
                                 ),
                               ),
                               Text(
-                                detail['runtime'] == 0
+                                detail['duration'] == 0
                                     ? "Chưa rõ"
-                                    : " ${detail['runtime']} phút",
+                                    : " ${detail['duration']} phút",
                               ),
                               IconButton(
                                   onPressed: toggleFavorite,
@@ -273,68 +290,51 @@ class _DetailFilmState extends State<DetailFilm> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Thể loại: ",
+                                "Thể loại: ${detail['categories']}",
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              Wrap(
-                                spacing: 8.0, // gap between adjacent chips
-                                runSpacing: 4.0, // gap between lines
-                                children: gener.asMap().entries.map((entry) {
-                                  int idx = entry.key;
-                                  Map<String, dynamic> item = entry.value;
-                                  String suffix =
-                                      idx == gener.length - 1 ? '' : ',';
-                                  return Text(
-                                    item['name'].replaceFirst('Phim ', '') +
-                                        suffix,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  );
-                                }).toList(),
                               ),
                             ],
                           ),
                           SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Text(
-                                'Đánh giá:',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(width: 10),
-                              SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      CircularProgressIndicator(
-                                        strokeWidth: 5,
-                                        value: voteRatio,
-                                        backgroundColor: Colors.grey[200],
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                progressColor),
-                                      ),
-                                      Text(
-                                        voteAverage?.toStringAsFixed(1) ?? '',
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ]),
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Text(
+                          //       'Đánh giá:',
+                          //       style: TextStyle(
+                          //           fontSize: 16, fontWeight: FontWeight.bold),
+                          //     ),
+                          //     SizedBox(width: 10),
+                          //     SizedBox(
+                          //       width: 30,
+                          //       height: 30,
+                          //       child: Stack(
+                          //           alignment: Alignment.center,
+                          //           children: [
+                          //             CircularProgressIndicator(
+                          //               strokeWidth: 5,
+                          //               value: voteRatio,
+                          //               backgroundColor: Colors.grey[200],
+                          //               valueColor:
+                          //                   AlwaysStoppedAnimation<Color>(
+                          //                       progressColor),
+                          //             ),
+                          //             Text(
+                          //               voteAverage?.toStringAsFixed(1) ?? '',
+                          //               style: TextStyle(
+                          //                   fontSize: 13,
+                          //                   fontWeight: FontWeight.bold),
+                          //             ),
+                          //           ]),
+                          //     ),
+                          //   ],
+                          // ),
                           SizedBox(height: 10),
                           Text("Trailer:",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16)),
                           SizedBox(height: 10),
-                          video['key'] == null
+                          video == null
                               ? Text("Tạm thời chưa cập nhật")
                               : YoutubePlayer(
                                   controller: _controller,
