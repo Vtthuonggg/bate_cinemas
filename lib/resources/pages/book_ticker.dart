@@ -22,6 +22,8 @@ class BookTicket extends StatefulWidget {
 class _BookTicketState extends State<BookTicket> {
   NumberFormat vndFormat = NumberFormat.currency(locale: 'vi_VN', symbol: '');
   List<bool> selectedSeats = List<bool>.generate(150, (index) => false);
+  List<Map<String, dynamic>> selectedSeatCoordinates = [];
+
   getPrice() {
     num price = 0;
     DateTime now = DateTime.now();
@@ -41,6 +43,7 @@ class _BookTicketState extends State<BookTicket> {
     return price;
   }
 
+  submit() {}
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -153,6 +156,19 @@ class _BookTicketState extends State<BookTicket> {
                     onTap: () {
                       setState(() {
                         selectedSeats[index] = !selectedSeats[index];
+                        if (selectedSeats[index]) {
+                          selectedSeatCoordinates.add({
+                            'row': String.fromCharCode(row + 65),
+                            'column': seat + 1
+                          });
+                        } else {
+                          selectedSeatCoordinates.removeWhere(
+                              (seatCoordinate) =>
+                                  seatCoordinate['row'] ==
+                                      String.fromCharCode(row + 65) &&
+                                  seatCoordinate['column'] == seat + 1);
+                        }
+                        print(selectedSeatCoordinates);
                       });
                     },
                     child: Stack(
@@ -197,6 +213,7 @@ class _BookTicketState extends State<BookTicket> {
               ),
               child: TextButton(
                   onPressed: () {
+                    submit();
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => HomePageUser()),
