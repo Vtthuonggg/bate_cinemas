@@ -1,10 +1,5 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_app/resources/custom_toast.dart';
-import 'package:flutter_app/resources/pages/home_page.dart';
 import 'package:flutter_app/resources/pages/home_page_user.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -62,7 +57,7 @@ class _BookTicketState extends State<BookTicket> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.film['title'],
+                  widget.film['name'],
                   style: GoogleFonts.oswald(
                       fontSize: 20, fontWeight: FontWeight.w400),
                 ),

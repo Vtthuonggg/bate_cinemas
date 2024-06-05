@@ -195,19 +195,19 @@ class _LoginPageState extends State<LoginPage> {
                             loading = true;
                           });
 
-                          final apiService = ApiService();
-                          final loginApi = TMDBLoginApi(apiService);
+                          // final apiService = ApiService();
+                          // final loginApi = TMDBLoginApi(apiService);
                           final username = _username.text;
                           final password = _password.text;
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           await prefs.setString('username', username);
                           await prefs.setString('password', password);
-                          String? sessionid =
-                              await loginApi.login(username, password);
+                          // String? sessionid =
+                          //     await loginApi.login(username, password);
                           // if (sessionid != null) {
                           //   await prefs.setString('sessionId', sessionid);
-                          //   globals.username = _username.text;
+                          globals.username = _username.text;
                           Navigator.pushReplacementNamed(
                               context, '/main_screen');
                           // } else {

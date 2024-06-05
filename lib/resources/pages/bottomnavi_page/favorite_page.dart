@@ -18,7 +18,7 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   void initState() {
     super.initState();
-    getFavoriteMovies();
+    // getFavoriteMovies();
   }
 
   getFavoriteMovies() async {
