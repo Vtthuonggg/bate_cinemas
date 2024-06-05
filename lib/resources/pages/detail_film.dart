@@ -55,6 +55,36 @@ class _DetailFilmState extends State<DetailFilm> {
     }
   }
 
+  String getRating(String ratingText) {
+    print(ratingText);
+    switch (ratingText) {
+      case "P - PHIM DÀNH CHO MỌI ĐỐI TƯỢNG":
+        return "Mọi lứa tuổi";
+      case "C13 - PHIM CẤM KHÁN GIẢ DƯỚI 13 TUỔI":
+        return "C13";
+      case "C16 - PHIM CẤM KHÁN GIẢ DƯỚI 16 TUỔI":
+        return "C16";
+      case "C18 - PHIM CẤM KHÁN GIẢ DƯỚI 18 TUỔI":
+        return "C18";
+      default:
+        return '';
+    }
+  }
+
+  Color getRatingColor(String ratingText) {
+    switch (ratingText) {
+      case "P - PHIM DÀNH CHO MỌI ĐỐI TƯỢNG":
+        return Colors.green;
+      case "C13 - PHIM CẤM KHÁN GIẢ DƯỚI 13 TUỔI":
+        return Colors.yellow;
+      case "C16 - PHIM CẤM KHÁN GIẢ DƯỚI 16 TUỔI":
+        return Colors.orange;
+      case "C18 - PHIM CẤM KHÁN GIẢ DƯỚI 18 TUỔI":
+        return Colors.red;
+      default:
+        return Colors.white;
+    }
+  }
   // Future<void> fetchFavorite() async {
   //   var res = await FavoriteApi(_apiService).getFavoriteMovies();
   //   print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
@@ -209,6 +239,7 @@ class _DetailFilmState extends State<DetailFilm> {
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 10),
+
                           Text(
                             "Mô tả phim:",
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -246,6 +277,14 @@ class _DetailFilmState extends State<DetailFilm> {
                                 });
                               },
                             ),
+                          SizedBox(height: 10),
+                          Text(
+                            getRating(detail['rated'] ?? ''),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: getRatingColor(detail['rated'] ?? '')),
+                          ),
                           SizedBox(height: 10),
                           Row(
                             children: [
