@@ -63,7 +63,8 @@ class _SplashScreenState extends State<SplashScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Transform.scale(
-              scale: 0.5, child: Image.asset('public/assets/images/bate.png')),
+              scale: 0.5,
+              child: Image.asset('public/assets/images/logo_bate.png')),
           CircularProgressIndicator(
             color: Colors.blue,
           )

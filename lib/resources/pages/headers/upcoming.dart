@@ -25,11 +25,8 @@ class _UpcomingState extends State<Upcoming> {
   Future fetchMovies() async {
     try {
       var res = await movieNowPlayingApi.fetchUpcomingMovie();
-      if (res != null && res.containsKey('results')) {
-        movies = res['results'];
-      } else {
-        print('No results found');
-      }
+
+      movies = res;
     } catch (e) {
       print('Lỗi: $e');
     }
@@ -64,6 +61,7 @@ class _UpcomingState extends State<Upcoming> {
                 itemBuilder: ((context, index) {
                   return GestureDetector(
                     onTap: () {
+                      print(movies[index]['id']);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -79,12 +77,12 @@ class _UpcomingState extends State<Upcoming> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Image.network(
-                            'https://image.tmdb.org/t/p/w500${movies[index]['poster_path']}',
+                            movies[index]['smallImageURl'],
                             fit: BoxFit.cover,
                           ),
                         ),
                         Text(
-                          movies[index]['title'],
+                          movies[index]['name'],
                           style: GoogleFonts.oswald(),
                           overflow: TextOverflow.ellipsis,
                         )

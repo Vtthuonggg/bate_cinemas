@@ -34,8 +34,6 @@ class _DetailFilmState extends State<DetailFilm> {
     super.initState();
     movieDetailApi = MovieDetailApi(_apiService, movieId: widget.movieId);
     fetchDetail();
-    // getVideo();
-    // fetchFavorite();
   }
 
   @override
@@ -169,8 +167,8 @@ class _DetailFilmState extends State<DetailFilm> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    double? voteAverage = detail['vote_average'];
-    double? voteRatio = voteAverage != null ? voteAverage / 10.0 : null;
+    double? voteAverage = detail['rating'];
+
     Color progressColor = Colors.grey;
 
     if (voteAverage != null) {
@@ -239,7 +237,6 @@ class _DetailFilmState extends State<DetailFilm> {
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 10),
-
                           Text(
                             "Mô tả phim:",
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -325,63 +322,57 @@ class _DetailFilmState extends State<DetailFilm> {
                             ],
                           ),
                           SizedBox(height: 10),
-                          Column(
+                          Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Thể loại: ",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
+                              Text(
+                                "Thể loại: ",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  "${detail['categories']}",
+                                  style: TextStyle(
+                                    fontSize: 16,
                                   ),
-                                  Flexible(
-                                    child: Text(
-                                      "${detail['categories']}",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
+                                ),
+                              ),
                             ],
                           ),
                           SizedBox(height: 10),
-                          // Row(
-                          //   children: [
-                          //     Text(
-                          //       'Đánh giá:',
-                          //       style: TextStyle(
-                          //           fontSize: 16, fontWeight: FontWeight.bold),
-                          //     ),
-                          //     SizedBox(width: 10),
-                          //     SizedBox(
-                          //       width: 30,
-                          //       height: 30,
-                          //       child: Stack(
-                          //           alignment: Alignment.center,
-                          //           children: [
-                          //             CircularProgressIndicator(
-                          //               strokeWidth: 5,
-                          //               value: voteRatio,
-                          //               backgroundColor: Colors.grey[200],
-                          //               valueColor:
-                          //                   AlwaysStoppedAnimation<Color>(
-                          //                       progressColor),
-                          //             ),
-                          //             Text(
-                          //               voteAverage?.toStringAsFixed(1) ?? '',
-                          //               style: TextStyle(
-                          //                   fontSize: 13,
-                          //                   fontWeight: FontWeight.bold),
-                          //             ),
-                          //           ]),
-                          //     ),
-                          //   ],
-                          // ),
+                          Row(
+                            children: [
+                              Text(
+                                'Đánh giá:',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 10),
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        strokeWidth: 5,
+                                        value: voteAverage,
+                                        backgroundColor: Colors.grey[200],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                progressColor),
+                                      ),
+                                      Text(
+                                        voteAverage?.toStringAsFixed(1) ?? '',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ]),
+                              ),
+                            ],
+                          ),
                           SizedBox(height: 10),
                           Text("Trailer:",
                               style: TextStyle(

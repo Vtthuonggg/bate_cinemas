@@ -6,7 +6,7 @@ class MovieUpcomingApi {
 
   MovieUpcomingApi(this._apiService);
 
-  Future<Map<String, dynamic>> fetchUpcomingMovie() async {
+  Future<List<dynamic>> fetchUpcomingMovie() async {
     try {
       final response = await _apiService.network(
         request: (request) => request.get("/api/movies/coming"),
@@ -16,11 +16,11 @@ class MovieUpcomingApi {
         return response;
       } else {
         print('Failed to load now playing movies ');
-        return {};
+        return [];
       }
     } catch (e) {
       print('Failed to fetch now playing movies: $e');
-      return {};
+      return [];
     }
   }
 }
