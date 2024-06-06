@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_app/app/networking/api_service.dart';
-import 'package:flutter_app/app/networking/searching_film_api.dart';
+import 'package:flutter_app/app/networking/movie_now_playing_api.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchingPage extends StatefulWidget {
   const SearchingPage({Key? key}) : super(key: key);
@@ -10,50 +13,33 @@ class SearchingPage extends StatefulWidget {
 }
 
 class _SearchingPageState extends State<SearchingPage> {
-  String? _selectedGenre;
-  String? _selectedSort;
   final _apiService = ApiService();
-  SearchingApi? _searchingApi;
-  List<dynamic> movies = [];
-  final Map<String, String> _genres = {
-    'Hành động': '28',
-    'Phiêu lưu': '12',
-    'Hoạt hình': '16',
-    'Hài': '35',
-    'Tội phạm': '80',
-    'Tài liệu': '99',
-    'Kịch': '18',
-    'Gia đình': '10751',
-    'Huyền ảo': '14',
-    'Lịch sử': '36',
-    'Kinh dị': '27',
-    'Âm nhạc': '10402',
-    'Bí ẩn': '9648',
-    'Lãng mạn': '10749',
-    'Khoa học viễn tưởng': '878',
-    'Phim truyền hình': '10770',
-    'Hồi hộp': '53',
-    'Chiến tranh': '10752',
-    'Miền Tây': '37',
-  };
-  final Map<String, String> _sortOptions = {
-    'Ngày phát hành': 'release_date.desc',
-    'Xếp hạng': 'vote_average.desc',
-  };
+  late MovieNowPlayingApi movieNowPlayingApi;
+
+  List<Map<String, dynamic>> movies = [];
+  List<Map<String, dynamic>> filteredMovies = [];
+  String search = '';
   @override
   void initState() {
     super.initState();
-    _searchingApi = SearchingApi(_apiService);
+    movieNowPlayingApi = MovieNowPlayingApi(_apiService);
+    fetchMovies();
   }
 
-  Future<void> _fetchMovies() async {
-    if (_selectedGenre != null && _selectedSort != null) {
-      final res = await _searchingApi!
-          .fetchMoviesWithGenner(_selectedGenre!, _selectedSort!);
-      movies = res;
-      print('MOVIES::: ');
-      print(movies);
+  Future fetchMovies() async {
+    try {
+      var res = await movieNowPlayingApi.fetchMovies();
+      setState(() {
+        movies = res;
+        filteredMovies =
+            movies.length > 10 ? movies.sublist(0, 10) : List.from(movies);
+        print(filteredMovies);
+        print(movies);
+      });
+    } catch (e) {
+      print('Lỗi: $e');
     }
+    print('Movies::: $movies');
   }
 
   @override
@@ -64,57 +50,69 @@ class _SearchingPageState extends State<SearchingPage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: DropdownButton<String>(
-                    value: _selectedGenre,
-                    hint: const Text('Chọn thể loại'),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedGenre = newValue;
-                      });
-                    },
-                    items: _genres.keys
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
+            TextField(
+              cursorColor: Colors.blue,
+              decoration: InputDecoration(
+                labelText: 'Nhập tên phim',
+                labelStyle: TextStyle(color: Colors.grey),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
                 ),
-                const SizedBox(width: 10),
-                DropdownButton<String>(
-                  value: _selectedSort,
-                  hint: const Text(
-                    'Chọn sắp xếp',
-                  ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedSort = newValue;
-                    });
-                  },
-                  items: _sortOptions.keys
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                )
-              ],
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  search = value.toLowerCase();
+                  if (search.isEmpty) {
+                    filteredMovies = movies.length > 10
+                        ? movies.sublist(0, 10)
+                        : List.from(movies);
+                  } else {
+                    filteredMovies = movies.where((movie) {
+                      return movie['name'].toLowerCase().contains(search);
+                    }).toList();
+                  }
+                });
+              },
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              onPressed: _fetchMovies,
-              child: Text(
-                'Xác nhận',
-                style: TextStyle(color: Colors.white),
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredMovies.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: GestureDetector(
+                      child: Row(children: [
+                        Container(
+                          width: 150,
+                          height: 80,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              filteredMovies[index]['largeImageURL'],
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          child: Text(
+                            filteredMovies[index]['name'],
+                            style: GoogleFonts.oswald(),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )
+                      ]),
+                    ),
+                  );
+                },
               ),
             ),
           ]),

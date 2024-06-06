@@ -38,16 +38,16 @@ class _MainScreenState extends State<MainScreen> {
           highlightColor: Colors.transparent,
         ),
         child: BottomNavigationBar(
-          backgroundColor: Colors.grey[100],
+          backgroundColor: Colors.white,
           type: BottomNavigationBarType.fixed,
           showUnselectedLabels: true,
           selectedItemColor: Colors.blue,
           unselectedItemColor: Color(0xffA1AAB9),
           onTap: onTabTapped,
           currentIndex: _currentIndex,
-          selectedIconTheme: IconThemeData(size: 30),
+          selectedIconTheme: IconThemeData(size: 27),
           selectedLabelStyle:
-              TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
           unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
           items: [
             BottomNavigationBarItem(

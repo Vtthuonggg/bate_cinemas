@@ -24,12 +24,8 @@ class _NowPlayingState extends State<NowPlaying> {
   Future fetchMovies() async {
     try {
       var res = await movieNowPlayingApi.fetchNowPlayingMovies();
-      if (res != null) {
-        movies = res;
-        print(movies);
-      } else {
-        print('No results found');
-      }
+      movies = res;
+      print(movies);
     } catch (e) {
       print('Lỗi: $e');
     }
@@ -62,7 +58,6 @@ class _NowPlayingState extends State<NowPlaying> {
                     crossAxisSpacing: 10),
                 itemCount: movies.length,
                 itemBuilder: ((context, index) {
-                  print(movies[0]['poster_path']);
                   return GestureDetector(
                     onTap: () {
                       print(movies[index]['id']);

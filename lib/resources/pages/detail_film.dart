@@ -80,7 +80,7 @@ class _DetailFilmState extends State<DetailFilm> {
       case "C16 - PHIM CẤM KHÁN GIẢ DƯỚI 16 TUỔI":
         return Colors.orange;
       case "C18 - PHIM CẤM KHÁN GIẢ DƯỚI 18 TUỔI":
-        return Colors.red;
+        return Color.fromARGB(255, 223, 26, 12);
       default:
         return Colors.white;
     }
