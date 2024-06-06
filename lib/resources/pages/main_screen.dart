@@ -4,6 +4,7 @@ import 'package:flutter_app/resources/pages/bottomnavi_page/favorite_page.dart';
 import 'package:flutter_app/resources/pages/bottomnavi_page/searching_page.dart';
 import 'package:flutter_app/resources/pages/bottomnavi_page/setting.dart';
 import 'package:flutter_app/resources/pages/home_page_user.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key? key}) : super(key: key);
@@ -59,8 +60,8 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Tìm kiếm',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: 'Yêu thích',
+              icon: Icon(FontAwesomeIcons.film),
+              label: 'Rạp phim',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
