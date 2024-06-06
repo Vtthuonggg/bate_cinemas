@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/app/networking/api_service.dart';
 import 'package:flutter_app/app/networking/detail_film_api.dart';
-import 'package:flutter_app/app/networking/favorite_api.dart';
+import 'package:flutter_app/app/networking/location_api.dart';
 import 'package:flutter_app/resources/location/location.dart';
 import 'package:flutter_app/resources/pages/book_ticker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,18 +39,6 @@ class _DetailFilmState extends State<DetailFilm> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<void> toggleFavorite() async {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-    try {
-      await FavoriteApi(_apiService)
-          .addFavoriteMovie(movieId: widget.movieId, isFavorite: isFavorite);
-    } catch (e) {
-      print('Lỗi toggling favorite: $e');
-    }
   }
 
   String getRating(String ratingText) {
@@ -310,15 +298,6 @@ class _DetailFilmState extends State<DetailFilm> {
                                     ? "Chưa rõ"
                                     : " ${detail['duration']} phút",
                               ),
-                              IconButton(
-                                  onPressed: toggleFavorite,
-                                  icon: Icon(
-                                    isFavorite
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color:
-                                        isFavorite ? Colors.red : Colors.grey,
-                                  ))
                             ],
                           ),
                           SizedBox(height: 10),

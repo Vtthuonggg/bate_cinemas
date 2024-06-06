@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/resources/pages/bottomnavi_page/actor_page.dart';
-import 'package:flutter_app/resources/pages/bottomnavi_page/favorite_page.dart';
+import 'package:flutter_app/resources/pages/bottomnavi_page/branchs_film.dart';
 import 'package:flutter_app/resources/pages/bottomnavi_page/searching_page.dart';
 import 'package:flutter_app/resources/pages/bottomnavi_page/setting.dart';
 import 'package:flutter_app/resources/pages/home_page_user.dart';
@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _children = [
     HomePageUser(),
     SearchingPage(),
-    FavoritePage(),
+    BranchFilm(),
     SettingPage(),
   ];
 
