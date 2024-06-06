@@ -188,34 +188,41 @@ class _LocationState extends State<Location> {
                           1000;
                       return Column(
                         children: [
-                          Container(
-                            width: width,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: ListTile(
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('${cinema.name}'),
-                                  Text('${distance.toStringAsFixed(1)} km')
-                                ],
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                expandedIndex[index] = !expandedIndex[index];
+                              });
+                            },
+                            child: Container(
+                              width: width,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              trailing: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      expandedIndex[index] =
-                                          !expandedIndex[index];
-                                    });
-                                  },
-                                  icon: Icon(
-                                    expandedIndex[index]
-                                        ? Icons.expand_less
-                                        : Icons.expand_more,
-                                    color: Colors.blue,
-                                  )),
+                              child: ListTile(
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('${cinema.name}'),
+                                    Text('${distance.toStringAsFixed(1)} km')
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        expandedIndex[index] =
+                                            !expandedIndex[index];
+                                      });
+                                    },
+                                    icon: Icon(
+                                      expandedIndex[index]
+                                          ? Icons.expand_less
+                                          : Icons.expand_more,
+                                      color: Colors.blue,
+                                    )),
+                              ),
                             ),
                           ),
                           if (expandedIndex[index])
