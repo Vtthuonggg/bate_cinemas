@@ -212,7 +212,10 @@ class _SearchingPageState extends State<SearchingPage> {
                                       },
                                     ),
                                     ListTile(
-                                      leading: Icon(Icons.movie),
+                                      leading: Icon(
+                                        Icons.movie,
+                                        color: Colors.blue,
+                                      ),
                                       title: Text('Thể loại'),
                                       onTap: () {
                                         showDialog(
@@ -306,6 +309,39 @@ class _SearchingPageState extends State<SearchingPage> {
                                         );
                                       },
                                     ),
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.date_range,
+                                        color: Colors.blue,
+                                      ),
+                                      title: Text('Tìm theo ngày chiếu'),
+                                      onTap: () {
+                                        showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime.now(),
+                                          lastDate: DateTime.now()
+                                              .add(Duration(days: 7)),
+                                        ).then((selectedDate) {
+                                          if (selectedDate != null) {
+                                            setState(() {
+                                              filteredMovies =
+                                                  movies.where((movie) {
+                                                DateTime releaseDate =
+                                                    DateTime.parse(
+                                                        movie['releaseDate']);
+                                                return releaseDate.isBefore(
+                                                        selectedDate) &&
+                                                    releaseDate.isAfter(
+                                                        selectedDate.subtract(
+                                                            Duration(
+                                                                days: 20)));
+                                              }).toList();
+                                            });
+                                          }
+                                        });
+                                      },
+                                    )
                                   ],
                                 ),
                               );
@@ -380,7 +416,8 @@ class _SearchingPageState extends State<SearchingPage> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
-                                    filteredMovies[index]['largeImageURL'],
+                                    filteredMovies[index]['largeImageURL'] ??
+                                        'https://via.placeholder.com/150',
                                     fit: BoxFit.fill,
                                   ),
                                 ),
