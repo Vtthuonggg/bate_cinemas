@@ -155,7 +155,7 @@ class _DetailFilmState extends State<DetailFilm> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    double? voteAverage = detail['rating'];
+    double? voteAverage = detail['raeting'];
 
     Color progressColor = Colors.grey;
 
@@ -336,14 +336,18 @@ class _DetailFilmState extends State<DetailFilm> {
                                     children: [
                                       CircularProgressIndicator(
                                         strokeWidth: 5,
-                                        value: voteAverage,
+                                        value: voteAverage! / 10,
                                         backgroundColor: Colors.grey[200],
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
                                                 progressColor),
                                       ),
                                       Text(
-                                        voteAverage?.toStringAsFixed(1) ?? '',
+                                        (voteAverage == 10.0
+                                                ? '10'
+                                                : voteAverage
+                                                    ?.toStringAsFixed(1)) ??
+                                            '',
                                         style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.bold),
@@ -403,7 +407,7 @@ class _DetailFilmState extends State<DetailFilm> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Location(
-                            film: detail,
+                            movideDetail: detail,
                           )),
                 );
               },

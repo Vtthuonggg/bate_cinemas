@@ -37,9 +37,11 @@ class _BranchFilmState extends State<BranchFilm> {
       _branchs = res;
       print(_branchs);
     }
-    setState(() {
-      _loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   Future<void> getUserLocation() async {
@@ -59,9 +61,12 @@ class _BranchFilmState extends State<BranchFilm> {
         branch['distance'] = null;
       }
     }
-    setState(() {
-      _loading = false;
-    });
+    _branchs.sort((a, b) => a['distance'].compareTo(b['distance']));
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -113,7 +118,8 @@ class _BranchFilmState extends State<BranchFilm> {
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 Text(
-                                    '${_branchs[index]['distance'].toStringAsFixed(1)} km'),
+                                    '${_branchs[index]['distance'].toStringAsFixed(1)} km' ??
+                                        '0'),
                               ],
                             ),
                           ),

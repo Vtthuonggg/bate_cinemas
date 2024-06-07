@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/app/networking/api_service.dart';
 import 'package:flutter_app/app/networking/movie_now_playing_api.dart';
+import 'package:flutter_app/resources/pages/dashed_divide.dart';
 import 'package:flutter_app/resources/pages/detail_film.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diacritic/diacritic.dart';
@@ -93,261 +94,326 @@ class _SearchingPageState extends State<SearchingPage> {
                   TextField(
                     cursorColor: Colors.blue,
                     decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.filter_list),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
-                                height: heght / 4,
-                                child: Wrap(
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8.0),
-                                          child: Text(
-                                            'Chọn bộ lọc',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.child_care,
-                                        color: Colors.blue,
+                      suffixIcon: Wrap(
+                        spacing: -10.0, // gap between adjacent chips
+                        runSpacing: 0.0,
+                        alignment: WrapAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.format_line_spacing),
+                            onPressed: () {
+                              showMenu(
+                                context: context,
+                                position: RelativeRect.fromLTRB(100, 100, 0, 0),
+                                items: [
+                                  PopupMenuItem(
+                                    child: TextButton(
+                                      child: Text(
+                                        'Đánh giá tăng dần',
+                                        style: TextStyle(color: Colors.black),
                                       ),
-                                      title: Text('Độ tuổi'),
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              backgroundColor: Color.fromARGB(
-                                                  255, 255, 255, 255),
-                                              title: Text('Chọn độ tuổi'),
-                                              content: StatefulBuilder(builder:
-                                                  (BuildContext context,
-                                                      StateSetter setState) {
-                                                return ListView.builder(
-                                                  shrinkWrap: true,
-                                                  physics:
-                                                      NeverScrollableScrollPhysics(),
-                                                  itemCount: ageRatings.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return CheckboxListTile(
-                                                      dense: true,
-                                                      checkColor: Colors.white,
-                                                      activeColor: Colors.blue,
-                                                      title: Text(
-                                                        ageRatings[index],
-                                                      ),
-                                                      value: selectedAgeRatings
-                                                          .contains(ageRatings[
-                                                              index]),
-                                                      onChanged: (bool? value) {
-                                                        setState(() {
-                                                          if (value != null) {
-                                                            if (value) {
-                                                              selectedAgeRatings
-                                                                  .add(ageRatings[
-                                                                      index]);
-                                                            } else {
-                                                              selectedAgeRatings
-                                                                  .remove(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          filteredMovies.sort((a, b) =>
+                                              a['raeting']
+                                                  .compareTo(b['raeting']));
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    child: TextButton(
+                                      child: Text('Đánh giá giảm dần',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          filteredMovies.sort((a, b) =>
+                                              b['raeting']
+                                                  .compareTo(a['raeting']));
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.filter_list),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    height: heght / 4,
+                                    child: Wrap(
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0),
+                                              child: Text(
+                                                'Chọn bộ lọc',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.child_care,
+                                            color: Colors.blue,
+                                          ),
+                                          title: Text('Độ tuổi'),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 255, 255, 255),
+                                                  title: Text('Chọn độ tuổi'),
+                                                  content: StatefulBuilder(
+                                                      builder:
+                                                          (BuildContext context,
+                                                              StateSetter
+                                                                  setState) {
+                                                    return ListView.builder(
+                                                      shrinkWrap: true,
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
+                                                      itemCount:
+                                                          ageRatings.length,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        return CheckboxListTile(
+                                                          dense: true,
+                                                          checkColor:
+                                                              Colors.white,
+                                                          activeColor:
+                                                              Colors.blue,
+                                                          title: Text(
+                                                            ageRatings[index],
+                                                          ),
+                                                          value: selectedAgeRatings
+                                                              .contains(
+                                                                  ageRatings[
+                                                                      index]),
+                                                          onChanged:
+                                                              (bool? value) {
+                                                            setState(() {
+                                                              if (value !=
+                                                                  null) {
+                                                                if (value) {
+                                                                  selectedAgeRatings.add(
                                                                       ageRatings[
                                                                           index]);
-                                                            }
-                                                          }
-                                                        });
+                                                                } else {
+                                                                  selectedAgeRatings.remove(
+                                                                      ageRatings[
+                                                                          index]);
+                                                                }
+                                                              }
+                                                            });
+                                                          },
+                                                        );
                                                       },
                                                     );
-                                                  },
-                                                );
-                                              }),
-                                              actions: [
-                                                ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          backgroundColor:
-                                                              Colors.blue),
-                                                  child: Text(
-                                                    'Xác nhận',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                    setState(() {
-                                                      filteredMovies =
-                                                          movies.where((movie) {
-                                                        return (selectedCategories
-                                                                    .isEmpty ||
-                                                                selectedCategories.any(
-                                                                    (category) => movie[
+                                                  }),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              backgroundColor:
+                                                                  Colors.blue),
+                                                      child: Text(
+                                                        'Xác nhận',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        setState(() {
+                                                          filteredMovies =
+                                                              movies.where(
+                                                                  (movie) {
+                                                            return (selectedCategories
+                                                                        .isEmpty ||
+                                                                    selectedCategories.any((category) => movie[
                                                                             'categories']
                                                                         .contains(
                                                                             category))) &&
-                                                            (selectedAgeRatings
-                                                                    .isEmpty ||
-                                                                selectedAgeRatings
-                                                                    .contains(movie[
-                                                                        'rated']));
-                                                      }).toList();
-                                                    });
-                                                  },
-                                                ),
-                                              ],
+                                                                (selectedAgeRatings
+                                                                        .isEmpty ||
+                                                                    selectedAgeRatings
+                                                                        .contains(
+                                                                            movie['rated']));
+                                                          }).toList();
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
                                             );
                                           },
-                                        );
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.movie,
-                                        color: Colors.blue,
-                                      ),
-                                      title: Text('Thể loại'),
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              backgroundColor: Color.fromARGB(
-                                                  255, 255, 255, 255),
-                                              title: Text('Chọn thể loại phim'),
-                                              content: StatefulBuilder(
-                                                builder: (BuildContext context,
-                                                    StateSetter setState) {
-                                                  return ListView.builder(
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        NeverScrollableScrollPhysics(),
-                                                    itemCount:
-                                                        categories.length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      return CheckboxListTile(
-                                                        dense: true,
-                                                        checkColor:
-                                                            Colors.white,
-                                                        activeColor:
-                                                            Colors.blue,
-                                                        title: Text(
-                                                          categories[index],
-                                                        ),
-                                                        value:
-                                                            selectedCategories
+                                        ),
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.movie,
+                                            color: Colors.blue,
+                                          ),
+                                          title: Text('Thể loại'),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 255, 255, 255),
+                                                  title: Text(
+                                                      'Chọn thể loại phim'),
+                                                  content: StatefulBuilder(
+                                                    builder: (BuildContext
+                                                            context,
+                                                        StateSetter setState) {
+                                                      return ListView.builder(
+                                                        shrinkWrap: true,
+                                                        physics:
+                                                            NeverScrollableScrollPhysics(),
+                                                        itemCount:
+                                                            categories.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return CheckboxListTile(
+                                                            dense: true,
+                                                            checkColor:
+                                                                Colors.white,
+                                                            activeColor:
+                                                                Colors.blue,
+                                                            title: Text(
+                                                              categories[index],
+                                                            ),
+                                                            value: selectedCategories
                                                                 .contains(
                                                                     categories[
                                                                         index]),
-                                                        onChanged:
-                                                            (bool? value) {
-                                                          setState(() {
-                                                            if (value != null) {
-                                                              if (value) {
-                                                                selectedCategories
-                                                                    .add(categories[
-                                                                        index]);
-                                                              } else {
-                                                                selectedCategories
-                                                                    .remove(categories[
-                                                                        index]);
-                                                              }
-                                                            }
-                                                          });
+                                                            onChanged:
+                                                                (bool? value) {
+                                                              setState(() {
+                                                                if (value !=
+                                                                    null) {
+                                                                  if (value) {
+                                                                    selectedCategories.add(
+                                                                        categories[
+                                                                            index]);
+                                                                  } else {
+                                                                    selectedCategories
+                                                                        .remove(
+                                                                            categories[index]);
+                                                                  }
+                                                                }
+                                                              });
+                                                            },
+                                                          );
                                                         },
                                                       );
                                                     },
-                                                  );
-                                                },
-                                              ),
-                                              actions: [
-                                                ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          backgroundColor:
-                                                              Colors.blue),
-                                                  child: Text(
-                                                    'Xác nhận',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
                                                   ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                    setState(() {
-                                                      filteredMovies =
-                                                          movies.where((movie) {
-                                                        return (selectedCategories
-                                                                    .isEmpty ||
-                                                                selectedCategories.any(
-                                                                    (category) => movie[
+                                                  actions: [
+                                                    ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              backgroundColor:
+                                                                  Colors.blue),
+                                                      child: Text(
+                                                        'Xác nhận',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        setState(() {
+                                                          filteredMovies =
+                                                              movies.where(
+                                                                  (movie) {
+                                                            return (selectedCategories
+                                                                        .isEmpty ||
+                                                                    selectedCategories.any((category) => movie[
                                                                             'categories']
                                                                         .contains(
                                                                             category))) &&
-                                                            (selectedAgeRatings
-                                                                    .isEmpty ||
-                                                                selectedAgeRatings
-                                                                    .contains(movie[
-                                                                        'rated']));
-                                                      }).toList();
-                                                    });
-                                                  },
-                                                ),
-                                              ],
+                                                                (selectedAgeRatings
+                                                                        .isEmpty ||
+                                                                    selectedAgeRatings
+                                                                        .contains(
+                                                                            movie['rated']));
+                                                          }).toList();
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
                                             );
                                           },
-                                        );
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.date_range,
-                                        color: Colors.blue,
-                                      ),
-                                      title: Text('Tìm theo ngày chiếu'),
-                                      onTap: () {
-                                        showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime.now(),
-                                          lastDate: DateTime.now()
-                                              .add(Duration(days: 7)),
-                                        ).then((selectedDate) {
-                                          if (selectedDate != null) {
-                                            setState(() {
-                                              filteredMovies =
-                                                  movies.where((movie) {
-                                                DateTime releaseDate =
-                                                    DateTime.parse(
-                                                        movie['releaseDate']);
-                                                return releaseDate.isBefore(
-                                                        selectedDate) &&
-                                                    releaseDate.isAfter(
-                                                        selectedDate.subtract(
-                                                            Duration(
-                                                                days: 20)));
-                                              }).toList();
+                                        ),
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.date_range,
+                                            color: Colors.blue,
+                                          ),
+                                          title: Text('Tìm theo ngày chiếu'),
+                                          onTap: () {
+                                            showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime.now(),
+                                              lastDate: DateTime.now()
+                                                  .add(Duration(days: 7)),
+                                            ).then((selectedDate) {
+                                              if (selectedDate != null) {
+                                                setState(() {
+                                                  filteredMovies =
+                                                      movies.where((movie) {
+                                                    DateTime releaseDate =
+                                                        DateTime.parse(movie[
+                                                            'releaseDate']);
+                                                    return releaseDate.isBefore(
+                                                            selectedDate) &&
+                                                        releaseDate.isAfter(
+                                                            selectedDate.subtract(
+                                                                Duration(
+                                                                    days: 20)));
+                                                  }).toList();
+                                                });
+                                              }
                                             });
-                                          }
-                                        });
-                                      },
-                                    )
-                                  ],
-                                ),
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
+                          ),
+                        ],
                       ),
                       contentPadding: EdgeInsets.symmetric(
                           vertical: 15.0, horizontal: 10.0),
