@@ -14,6 +14,7 @@ class Location extends StatefulWidget {
 class _LocationState extends State<Location> {
   ApiService _apiService = ApiService();
   dynamic movideDetail = {};
+  List<dynamic> branches = [];
   @override
   void initState() {
     super.initState();
@@ -23,6 +24,8 @@ class _LocationState extends State<Location> {
 
   Future<void> getBranchWithMovie(int movieId) async {
     var res = await LocationAPI(_apiService).getFimBranchWithMovieId(movieId);
+    branches = res;
+    print('branches: $branches');
   }
 
   @override

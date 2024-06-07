@@ -162,18 +162,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Text(
-                        'Quên mật khẩu?',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: Colors.blue[900],
-                            decoration: TextDecoration.underline),
-                      ),
-                    ],
-                  ),
                   SizedBox(height: 30),
                   Container(
                       width: width,

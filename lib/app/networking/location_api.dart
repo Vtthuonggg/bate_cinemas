@@ -44,7 +44,7 @@ class LocationAPI {
       final response = await _apiService.network(
         request: (request) => request
             .get("/api/branches/movie/branches-schedules", queryParameters: {
-          'movie_id': movieId,
+          'movieId': movieId,
         }),
       );
 
