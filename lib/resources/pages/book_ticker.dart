@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/resources/custom_toast.dart';
 import 'package:flutter_app/resources/pages/fake_invoice.dart';
 import 'package:flutter_app/resources/pages/home_page_user.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BookTicket extends StatefulWidget {
   Map<String, dynamic> film;
@@ -40,10 +43,12 @@ class _BookTicketState extends State<BookTicket> {
   String name = '';
   String address = '';
   String releaseDate = '';
+  List<Map<String, dynamic>> selectedTemp = [];
 
   @override
   void initState() {
     super.initState();
+    loadSelectedSeats();
     releaseDate = widget.dateRealse;
     time = widget.time;
     roomName = widget.roomName;
@@ -56,6 +61,19 @@ class _BookTicketState extends State<BookTicket> {
     room = movies['schedules'][0]['room'];
     print(room);
     print(price);
+  }
+
+  void loadSelectedSeats() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String filmTimeKey = '${name}_$time';
+    if (prefs.containsKey(filmTimeKey)) {
+      List<Map<String, dynamic>> loadedSeats = List<Map<String, dynamic>>.from(
+          jsonDecode(prefs.getString(filmTimeKey)!));
+      setState(() {
+        selectedTemp = loadedSeats;
+        print(selectedSeatCoordinates);
+      });
+    }
   }
 
   getPrice() {
@@ -194,7 +212,26 @@ class _BookTicketState extends State<BookTicket> {
                 Text(
                   ": Ghế đang được chọn",
                   style: GoogleFonts.oswald(fontSize: 20),
-                )
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Image.asset(
+                  'public/assets/images/seat.png',
+                  scale: 1.5,
+                  color: Colors.orange,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  ": Ghế đã được đặt",
+                  style: GoogleFonts.oswald(fontSize: 20),
+                ),
               ],
             ),
             SizedBox(
@@ -228,6 +265,13 @@ class _BookTicketState extends State<BookTicket> {
                   int seat = index % 11;
                   return GestureDetector(
                     onTap: () {
+                      if (selectedTemp.any((seatCoordinate) =>
+                          seatCoordinate['row'] ==
+                              String.fromCharCode(row + 65) &&
+                          seatCoordinate['column'] == seat + 1)) {
+                        // This seat was selected before, so we don't allow to interact with it
+                        return;
+                      }
                       setState(() {
                         selectedSeats[index] = !selectedSeats[index];
                         if (selectedSeats[index]) {
@@ -251,11 +295,16 @@ class _BookTicketState extends State<BookTicket> {
                         Image.asset(
                           'public/assets/images/seat.png',
                           scale: 1.5,
-                          color: selectedSeats[index]
-                              ? Colors.red[400]
-                              : row < 4
-                                  ? Colors.grey[400]
-                                  : Colors.blue[300],
+                          color: selectedTemp.any((seatCoordinate) =>
+                                  seatCoordinate['row'] ==
+                                      String.fromCharCode(row + 65) &&
+                                  seatCoordinate['column'] == seat + 1)
+                              ? Colors.orange
+                              : selectedSeats[index]
+                                  ? Colors.red[400]
+                                  : row < 4
+                                      ? Colors.grey[400]
+                                      : Colors.blue[300],
                         ),
                         Align(
                           alignment: Alignment.bottomCenter,
@@ -286,7 +335,13 @@ class _BookTicketState extends State<BookTicket> {
                 ),
               ),
               child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    String filmTimeKey = '${name}_$time';
+                    selectedSeatCoordinates.addAll(selectedTemp);
+                    await prefs.setString(
+                        filmTimeKey, jsonEncode(selectedSeatCoordinates));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
