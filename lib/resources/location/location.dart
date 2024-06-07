@@ -24,7 +24,7 @@ class _LocationState extends State<Location> {
   void initState() {
     super.initState();
     movideDetail = widget.movideDetail;
-    print('=============================================');
+
     print(movideDetail);
     setupLocation();
   }
@@ -78,132 +78,128 @@ class _LocationState extends State<Location> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return _loading
-        ? Center(
-            child: CircularProgressIndicator(
-              color: Colors.blue,
-            ),
-          )
-        : Scaffold(
-            appBar: AppBar(
-              title: Text('Rạp phim gần bạn'),
-            ),
-            body: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ListView.builder(
-                  itemCount: branches.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                expandedIndex[index] = !expandedIndex[index];
-                              });
-                            },
-                            child: Container(
-                              height: height / 10,
-                              width: width,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    branches[index]['name'],
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  Text(
-                                      '${branches[index]['distance'].toStringAsFixed(1)} km' ??
-                                          '0'),
-                                  IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          expandedIndex[index] =
-                                              !expandedIndex[index];
-                                        });
-                                      },
-                                      icon: Icon(
-                                        expandedIndex[index]
-                                            ? Icons.expand_less
-                                            : Icons.expand_more,
-                                        color: Colors.blue,
-                                      )),
-                                ],
-                              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Rạp phim gần bạn'),
+      ),
+      body: _loading
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Colors.blue,
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                itemCount: branches.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              expandedIndex[index] = !expandedIndex[index];
+                            });
+                          },
+                          child: Container(
+                            height: height / 10,
+                            width: width,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  branches[index]['name'],
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                Text(
+                                    '${branches[index]['distance'].toStringAsFixed(1)} km' ??
+                                        '0'),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        expandedIndex[index] =
+                                            !expandedIndex[index];
+                                      });
+                                    },
+                                    icon: Icon(
+                                      expandedIndex[index]
+                                          ? Icons.expand_less
+                                          : Icons.expand_more,
+                                      color: Colors.blue,
+                                    )),
+                              ],
                             ),
                           ),
-                          if (expandedIndex[index])
-                            Container(
-                                height: 60,
-                                child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount:
-                                        branches[index]['schedules'].length,
-                                    itemBuilder: (context, subIndex) {
-                                      final time = DateTime.parse(
-                                          '2022-01-01 ${branches[index]['schedules'][subIndex]['startTime']}');
-                                      final formattedTime =
-                                          "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
-                                      return Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                153, 187, 222, 251),
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                          child: TextButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BookTicket(
-                                                          film: branches[index],
-                                                          time: formattedTime,
-                                                          roomName: branches[
-                                                                          index]
-                                                                      [
-                                                                      'schedules']
-                                                                  [subIndex]
-                                                              ['room']['name'],
-                                                          branchName:
-                                                              branches[index]
-                                                                  ['name'],
-                                                          address:
-                                                              branches[index]
-                                                                  ['diaChi'],
-                                                          dateRealse: branches[
-                                                                          index]
-                                                                      [
-                                                                      'schedules']
-                                                                  [subIndex]
-                                                              ['startDate'],
-                                                        )),
-                                              );
-                                            },
-                                            child: Text(
-                                              formattedTime,
-                                              style: TextStyle(
-                                                  color: Colors.grey[900]),
-                                            ),
+                        ),
+                        if (expandedIndex[index])
+                          Container(
+                              height: 60,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:
+                                      branches[index]['schedules'].length,
+                                  itemBuilder: (context, subIndex) {
+                                    final time = DateTime.parse(
+                                        '2022-01-01 ${branches[index]['schedules'][subIndex]['startTime']}');
+                                    final formattedTime =
+                                        "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+                                    return Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              153, 187, 222, 251),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BookTicket(
+                                                        film: branches[index],
+                                                        time: formattedTime,
+                                                        roomName: branches[
+                                                                        index][
+                                                                    'schedules']
+                                                                [subIndex]
+                                                            ['room']['name'],
+                                                        branchName:
+                                                            branches[index]
+                                                                ['name'],
+                                                        address: branches[index]
+                                                            ['diaChi'],
+                                                        dateRealse: branches[
+                                                                        index][
+                                                                    'schedules']
+                                                                [subIndex]
+                                                            ['startDate'],
+                                                      )),
+                                            );
+                                          },
+                                          child: Text(
+                                            formattedTime,
+                                            style: TextStyle(
+                                                color: Colors.grey[900]),
                                           ),
                                         ),
-                                      );
-                                    }))
-                        ],
-                      ),
-                    );
-                  },
-                )),
-          );
+                                      ),
+                                    );
+                                  }))
+                      ],
+                    ),
+                  );
+                },
+              )),
+    );
   }
 }

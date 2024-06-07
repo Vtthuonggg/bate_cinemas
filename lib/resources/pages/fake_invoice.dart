@@ -192,7 +192,18 @@ class Invoice extends StatelessWidget {
               SizedBox(
                 height: 30,
               ),
-              Text("(Giá tiền đã bao gồm thuế VAT)")
+              Text("(Giá tiền đã bao gồm thuế VAT)"),
+              SizedBox(
+                height: 50,
+              ),
+              Image.asset('public/assets/images/barcode.png'),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "Cảm ơn quý khách đã chọn Bate Cinema! Chúc quý khách có trải nhiệm xem phim vui vẻ ❤️ ",
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),

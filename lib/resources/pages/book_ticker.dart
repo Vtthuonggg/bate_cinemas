@@ -339,9 +339,9 @@ class _BookTicketState extends State<BookTicket> {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     String filmTimeKey = '${name}_$time';
-                    selectedSeatCoordinates.addAll(selectedTemp);
+                    selectedTemp.addAll(selectedSeatCoordinates);
                     await prefs.setString(
-                        filmTimeKey, jsonEncode(selectedSeatCoordinates));
+                        filmTimeKey, jsonEncode(selectedTemp));
                     Navigator.push(
                       context,
                       MaterialPageRoute(

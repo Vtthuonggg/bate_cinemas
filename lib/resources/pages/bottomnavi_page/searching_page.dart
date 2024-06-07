@@ -166,9 +166,38 @@ class _SearchingPageState extends State<SearchingPage> {
                                         ],
                                       ),
                                       ListTile(
-                                        leading: Icon(
-                                          Icons.movie,
-                                          color: Colors.blue,
+                                        leading: Stack(
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.movie,
+                                              color: Colors.blue,
+                                            ),
+                                            if (selectedCategories.length > 0)
+                                              Positioned(
+                                                right: 0,
+                                                child: Container(
+                                                  padding: EdgeInsets.all(1),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                  constraints: BoxConstraints(
+                                                    minWidth: 12,
+                                                    minHeight: 12,
+                                                  ),
+                                                  child: Text(
+                                                    '${selectedCategories.length}',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 8,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
                                         ),
                                         title: Text('Thể loại'),
                                         onTap: () {
@@ -262,6 +291,8 @@ class _SearchingPageState extends State<SearchingPage> {
                                                                               'rated']));
                                                         }).toList();
                                                       });
+                                                      Navigator.of(context)
+                                                          .pop();
                                                     },
                                                   ),
                                                 ],
@@ -271,9 +302,38 @@ class _SearchingPageState extends State<SearchingPage> {
                                         },
                                       ),
                                       ListTile(
-                                        leading: Icon(
-                                          Icons.child_care,
-                                          color: Colors.blue,
+                                        leading: Stack(
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.child_care,
+                                              color: Colors.blue,
+                                            ),
+                                            if (selectedAgeRatings.length > 0)
+                                              Positioned(
+                                                right: 0,
+                                                child: Container(
+                                                  padding: EdgeInsets.all(1),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                  constraints: BoxConstraints(
+                                                    minWidth: 12,
+                                                    minHeight: 12,
+                                                  ),
+                                                  child: Text(
+                                                    '${selectedAgeRatings.length}',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 8,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
                                         ),
                                         title: Text('Độ tuổi'),
                                         onTap: () {
@@ -373,6 +433,8 @@ class _SearchingPageState extends State<SearchingPage> {
                                                                               'rated']));
                                                         }).toList();
                                                       });
+                                                      Navigator.of(context)
+                                                          .pop();
                                                     },
                                                   ),
                                                 ],
