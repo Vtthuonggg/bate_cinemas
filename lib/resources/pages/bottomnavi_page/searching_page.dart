@@ -407,7 +407,7 @@ class _SearchingPageState extends State<SearchingPage> {
                                                       releaseDate.isAfter(
                                                           selectedDate.subtract(
                                                               Duration(
-                                                                  days: 20)));
+                                                                  days: 60)));
                                                 }).toList();
                                               });
                                             }

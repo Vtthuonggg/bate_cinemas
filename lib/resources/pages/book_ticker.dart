@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/resources/custom_toast.dart';
+import 'package:flutter_app/resources/pages/fake_invoice.dart';
 import 'package:flutter_app/resources/pages/home_page_user.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -7,11 +8,19 @@ import 'package:intl/intl.dart';
 class BookTicket extends StatefulWidget {
   Map<String, dynamic> film;
   String time;
+  String roomName;
+  String branchName;
+  String address;
+  String dateRealse;
 
   BookTicket({
     Key? key,
     required this.film,
     required this.time,
+    required this.roomName,
+    required this.branchName,
+    required this.address,
+    required this.dateRealse,
   }) : super(key: key);
 
   @override
@@ -25,10 +34,24 @@ class _BookTicketState extends State<BookTicket> {
   Map<String, dynamic> room = {};
   Map<String, dynamic> movies = {};
   double price = 0;
+  String roomName = '';
+  String branchName = '';
+  String time = '';
+  String name = '';
+  String address = '';
+  String releaseDate = '';
+
   @override
   void initState() {
     super.initState();
+    releaseDate = widget.dateRealse;
+    time = widget.time;
+    roomName = widget.roomName;
+    branchName = widget.branchName;
     movies = widget.film;
+    name = widget.film['name'];
+    address = widget.address;
+
     price = movies['schedules'][0]['price'];
     room = movies['schedules'][0]['room'];
     print(room);
@@ -60,7 +83,6 @@ class _BookTicketState extends State<BookTicket> {
     return totalPrice;
   }
 
-  submit() {}
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -112,7 +134,7 @@ class _BookTicketState extends State<BookTicket> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.film['name'],
+                  name,
                   style: GoogleFonts.oswald(
                       fontSize: 20, fontWeight: FontWeight.w400),
                 ),
@@ -265,11 +287,20 @@ class _BookTicketState extends State<BookTicket> {
               ),
               child: TextButton(
                   onPressed: () {
-                    submit();
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePageUser()),
-                        (Route<dynamic> route) => false);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Invoice(
+                                seat: selectedSeatCoordinates,
+                                price: getPrice(),
+                                filmName: name,
+                                branchName: branchName,
+                                time: time,
+                                address: address,
+                                roomName: roomName,
+                                releaseDate: releaseDate,
+                              )),
+                    );
                     CustomToast.showToastSuccess(
                         description: 'Đặt vé thành công');
                   },

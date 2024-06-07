@@ -35,9 +35,11 @@ class _FilmBranchState extends State<FilmBranch> {
       movie = _branchs['movies'];
       print(_branchs);
     }
-    setState(() {
-      _loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -78,6 +80,12 @@ class _FilmBranchState extends State<FilmBranch> {
                                       builder: (context) => BookTicket(
                                             film: movie[index],
                                             time: formattedTime,
+                                            roomName: movie[index]['schedules']
+                                                [0]['room']['name'],
+                                            branchName: _branchs['name'],
+                                            address: _branchs['diaChi'],
+                                            dateRealse: movie[index]
+                                                ['schedules'][0]['startDate'],
                                           )));
                             },
                             child: Container(
@@ -111,6 +119,11 @@ class _FilmBranchState extends State<FilmBranch> {
                                       Text(
                                         movie[index]['schedules'][0]['room']
                                             ['name'],
+                                        style: GoogleFonts.oswald(
+                                            color: Colors.grey),
+                                      ),
+                                      Text(
+                                        'Ngày chiếu: ${movie[index]['schedules'][0]['startDate']}',
                                         style: GoogleFonts.oswald(
                                             color: Colors.grey),
                                       ),
