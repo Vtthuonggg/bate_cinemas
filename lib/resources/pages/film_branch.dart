@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/app/networking/api_service.dart';
 import 'package:flutter_app/app/networking/location_api.dart';
+import 'package:flutter_app/resources/pages/book_ticker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FilmBranch extends StatefulWidget {
@@ -69,48 +70,60 @@ class _FilmBranchState extends State<FilmBranch> {
                             "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Container(
-                            width: width,
-                            child: Row(children: [
-                              Container(
-                                width: 150,
-                                height: 80,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    movie[index]['largeImageURL'] ??
-                                        'https://via.placeholder.com/150',
-                                    fit: BoxFit.fill,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BookTicket(
+                                            film: movie[index],
+                                            time: formattedTime,
+                                          )));
+                            },
+                            child: Container(
+                              width: width,
+                              child: Row(children: [
+                                Container(
+                                  width: 150,
+                                  height: 80,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      movie[index]['largeImageURL'] ??
+                                          'https://via.placeholder.com/150',
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      movie[index]['name'],
-                                      style: GoogleFonts.oswald(),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      movie[index]['schedules'][0]['room']
-                                          ['name'],
-                                      style: GoogleFonts.oswald(
-                                          color: Colors.grey),
-                                    ),
-                                    Text(
-                                      "Giờ chiếu: $formattedTime ",
-                                      style: GoogleFonts.oswald(
-                                          color: Colors.grey),
-                                    ),
-                                  ],
+                                SizedBox(
+                                  width: 10,
                                 ),
-                              )
-                            ]),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        movie[index]['name'],
+                                        style: GoogleFonts.oswald(),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        movie[index]['schedules'][0]['room']
+                                            ['name'],
+                                        style: GoogleFonts.oswald(
+                                            color: Colors.grey),
+                                      ),
+                                      Text(
+                                        "Giờ chiếu: $formattedTime ",
+                                        style: GoogleFonts.oswald(
+                                            color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ]),
+                            ),
                           ),
                         );
                       },

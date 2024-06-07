@@ -7,13 +7,12 @@ import 'package:intl/intl.dart';
 class BookTicket extends StatefulWidget {
   Map<String, dynamic> film;
   String time;
-  DateTime bookingDay;
-  BookTicket(
-      {Key? key,
-      required this.film,
-      required this.time,
-      required this.bookingDay})
-      : super(key: key);
+
+  BookTicket({
+    Key? key,
+    required this.film,
+    required this.time,
+  }) : super(key: key);
 
   @override
   State<BookTicket> createState() => _BookTicketState();
@@ -23,24 +22,42 @@ class _BookTicketState extends State<BookTicket> {
   NumberFormat vndFormat = NumberFormat.currency(locale: 'vi_VN', symbol: '');
   List<bool> selectedSeats = List<bool>.generate(150, (index) => false);
   List<Map<String, dynamic>> selectedSeatCoordinates = [];
+  Map<String, dynamic> room = {};
+  Map<String, dynamic> movies = {};
+  double price = 0;
+  @override
+  void initState() {
+    super.initState();
+    movies = widget.film;
+    price = movies['schedules'][0]['price'];
+    room = movies['schedules'][0]['room'];
+    print(room);
+    print(price);
+  }
 
   getPrice() {
-    num price = 0;
+    num totalPrice = 0;
     DateTime now = DateTime.now();
     print('THỜI GIAN HIỆN TẠI: $now');
     String formattedDate = DateFormat("EEEE").format(now);
     print(formattedDate);
     bool isWeekend = (formattedDate == 'Friday' ||
-        formattedDate == 'Satuday' ||
+        formattedDate == 'Saturday' ||
         formattedDate == 'Sunday');
     for (int i = 0; i < selectedSeats.length; i++) {
       if (selectedSeats[i]) {
         int row = i ~/ 11;
-        price +=
-            isWeekend ? (row < 4 ? 60000 : 75000) : (row < 4 ? 45000 : 60000);
+        num seatPrice = price; // Replace with actual API price
+        if (row >= 4) {
+          seatPrice += 15000; // VIP seat surcharge
+        }
+        if (isWeekend) {
+          seatPrice += 15000; // Weekend surcharge
+        }
+        totalPrice += seatPrice;
       }
     }
-    return price;
+    return totalPrice;
   }
 
   submit() {}
@@ -51,6 +68,41 @@ class _BookTicketState extends State<BookTicket> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Đặt vé'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Giá vé phim'),
+                    content: Text.rich(
+                      TextSpan(children: <TextSpan>[
+                        TextSpan(
+                            text:
+                                'Vé phim của bạn có giá: ${vndFormat.format(price)}\n'),
+                        TextSpan(text: 'Vào cuối tuần giá vé tăng 15.000\n'),
+                        TextSpan(text: 'Ghế VIP tăng 15.000\n'),
+                      ]),
+                    ),
+                    actions: [
+                      TextButton(
+                        child: Text(
+                          'Đóng',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: Icon(Icons.help_outline),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
