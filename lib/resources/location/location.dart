@@ -161,12 +161,13 @@ class _LocationState extends State<Location> {
                                         ),
                                         child: TextButton(
                                           onPressed: () {
+                                            print(branches[index]);
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       BookTicket(
-                                                        film: branches[index],
+                                                        film: movideDetail,
                                                         time: formattedTime,
                                                         roomName: branches[
                                                                         index][
